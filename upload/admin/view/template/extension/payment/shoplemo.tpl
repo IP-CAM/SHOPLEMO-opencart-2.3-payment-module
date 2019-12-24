@@ -1,7 +1,3 @@
-<?php
-//var_dump($this);
-//die();
-?>
 <?php echo $header; ?><?php echo $column_left; ?>
 <div id="content">
 	<div class="page-header">
@@ -75,7 +71,6 @@
 
 							<div class="alert alert-info">
 								<i class="fa fa-exclamation-circle"></i> <?php echo $callback_url; ?>
-								<button type="button" class="close" data-dismiss="alert">&times;</button>
 							</div>
 						</div>
 					</div>
