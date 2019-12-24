@@ -164,7 +164,7 @@ class ControllerExtensionPaymentShoplemo extends Controller
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen($requestBody),
-                'Authorization: Basic ' . base64_encode($this->config->get('payment_shoplemo_api_key') . ':' . $this->config->get('payment_shoplemo_secret_key')),
+                'Authorization: Basic ' . base64_encode($this->config->get('shoplemo_api_key') . ':' . $this->config->get('shoplemo_secret_key')),
             ]);
             $result = @curl_exec($ch);
 
@@ -263,7 +263,7 @@ class ControllerExtensionPaymentShoplemo extends Controller
 
         $_data = json_decode($_POST['data'], true);
 
-        $hash = base64_encode(hash_hmac('sha256', $_data['progress_id'] . implode('|', $_data['payment']) . $this->config->get('payment_shoplemo_api_key'), $this->config->get('payment_shoplemo_secret_key'), true));
+        $hash = base64_encode(hash_hmac('sha256', $_data['progress_id'] . implode('|', $_data['payment']) . $this->config->get('shoplemo_api_key'), $this->config->get('shoplemo_secret_key'), true));
 
         if ($hash != $_data['hash'])
         {
@@ -281,12 +281,12 @@ class ControllerExtensionPaymentShoplemo extends Controller
             if ($_data['payment']['payment_status'] == 'COMPLETED' && $getOrder['order_status_id'] == 0)
             {
                 $note = 'Ödeme onaylandı.<br/><br/>## Shoplemo ##<br/># Müşteri Ödeme Tutarı: ' . $_data['payment']['paid_price'] . '<br/># Shoplemo Id: ' . $_data['progress_id'] . ' #Sipariş Id:' . $order_id;
-                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('payment_shoplemo_order_completed_id'), $note, true);
+                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('shoplemo_order_completed_id'), $note, true);
             }
             elseif ($_data['payment']['payment_status'] == 'FAILED')
             {
                 $note = 'Sipariş iptal edildi.<br/><br/>## Shoplemo ->Log ##<br/># Shoplemo Id: ' . $_data['progress_id'] . ' #Sipariş Id:' . $order_id . '<br/># Hata Mesajı: ' . $_data['payment']['error_message'];
-                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('payment_shoplemo_order_canceled_id'), $note, true);
+                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('shoplemo_order_canceled_id'), $note, true);
             }
 
             exit('OK');
